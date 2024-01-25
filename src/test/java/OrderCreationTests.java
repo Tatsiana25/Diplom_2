@@ -13,9 +13,10 @@ public class OrderCreationTests {
     @DisplayName("Создание заказа с авторизацией и ингредиентами")
     @Description("Тест на успешное создание заказа с авторизацией и указанными ингредиентами")
     public void testCreateOrderAuthorizedWithIngredients() {
-
+        // Берём первый существующий хеш ингредиента с тестового сервера
+        String ingredientId = OrderSteps.fetchIngredientId();
         // Создание заказа с ингредиентами
-        Response response = OrderSteps.createOrder(accessToken, new String[]{"61c0c5a71d1f82001bdaaa6d", "61c0c5a71d1f82001bdaaa6f", "61c0c5a71d1f82001bdaaa72"});
+        Response response = OrderSteps.createOrder(accessToken, new String[]{ingredientId});
 
         // Проверяем код ответа
         Assert.assertEquals(200, response.getStatusCode());
@@ -45,10 +46,10 @@ public class OrderCreationTests {
     public void testCreateOrderInvalidIngredientsHash() {
         // Создание заказа с неверным хешем ингредиентов
         Response response = OrderSteps.createOrder(accessToken, new String[]{"61c0c5a71d001bdaa"});
-        // Выводим тело ответа в консоль
-        System.out.println("Response body: " + response.getBody().asString());
 
-        //Вместо JSON возвращается HTML позеленила тест таким образом
-        Assert.assertTrue(response.getBody().asString().contains("Internal Server Error"));
+        Assert.assertEquals(500, response.getStatusCode());
+        // Проверяем тело ответа
+        Assert.assertFalse(response.jsonPath().getBoolean("success"));
+        Assert.assertEquals("Internal Server Error", response.jsonPath().getString("message"));
     }
 }

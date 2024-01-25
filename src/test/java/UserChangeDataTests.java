@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class UserChangeDataTests {
 
-    String newName = "NewUsername_" + System.currentTimeMillis();
+    String newName = TestDataGenerator.generateRandomUsername();
     private String accessToken = UserLoginSteps.getAccessToken(UserData.CHANGE_USER_EMAIL, UserData.CHANGE_USER_PASSWORD);
 
     @Test

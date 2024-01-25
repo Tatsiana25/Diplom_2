@@ -34,4 +34,14 @@ public class OrderSteps {
                 .header("Authorization", accessToken)
                 .get();
     }
+    @Step("Шаг: Получение данных об ингредиентах и извлечение значения _id ")
+    public static String fetchIngredientId() {
+        RestAssured.baseURI = UserData.INFORMATION_INGREDIENTS_URL;
+        Response response = RestAssured.get();
+
+        // Извлечение значения _id из первого элемента массива data
+        String ingredientId = response.jsonPath().getString("data[0]._id");
+
+        return ingredientId;
+    }
 }

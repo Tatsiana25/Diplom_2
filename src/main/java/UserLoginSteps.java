@@ -8,27 +8,30 @@ public class UserLoginSteps {
     @Step("Шаг: Логин пользователя с параметрами - email: {0}, password: {1}")
     static Response loginUser(String email, String password) {
         RestAssured.baseURI = UserData.BASE_URL;
+        UserRequests loginRequest = UserRequests.loginRequest(email, password);
         return RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body("{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}")
+                .body(loginRequest)
                 .post();
     }
 
     @Step("Шаг: Логин пользователя с параметрами - email: {0}, password: {1}, name: {2}")
     static Response registerUser(String email, String password, String name) {
         RestAssured.baseURI = UserData.REGISTERED_URL;
+        UserRequests registrationRequest = UserRequests.createAndDeleteRequest(email, password, name);
         return RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body("{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"name\":\"" + name + "\"}")
+                .body(registrationRequest)
                 .post();
     }
 
     @Step("Шаг: Удаление пользователя с параметрами - email: {0}, password: {1}, name: {2}")
     static Response deleteUser(String email, String password, String name) {
         RestAssured.baseURI = UserData.DELETE_URL;
+        UserRequests deletionRequest = UserRequests.createAndDeleteRequest(email, password, name);
         return RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body("{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"name\":\"" + name + "\"}")
+                .body(deletionRequest)
                 .delete();
     }
 
@@ -42,10 +45,11 @@ public class UserLoginSteps {
     @Step("Шаг: Изменение данных пользователя с авторизацией - access token: {0}, new name: {1}")
     static Response updateUserProfile(String accessToken, String newName) {
         RestAssured.baseURI = UserData.AUTHORIZATION_URL;
+        UserRequests updateRequest = UserRequests.updateRequest(newName);
         return RestAssured.given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", accessToken)
-                .body("{\"name\":\"" + newName + "\"}")
+                .body(updateRequest)
                 .patch();
     }
 }
