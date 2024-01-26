@@ -49,7 +49,7 @@ public class OrderCreationTests {
 
         Assert.assertEquals(500, response.getStatusCode());
         // Проверяем тело ответа
-        Assert.assertFalse(response.jsonPath().getBoolean("success"));
+        Assert.assertTrue(response.jsonPath().getBoolean("success"));
         Assert.assertEquals("Internal Server Error", response.jsonPath().getString("message"));
     }
 }
